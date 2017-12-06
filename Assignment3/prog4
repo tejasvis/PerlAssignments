@@ -1,0 +1,13 @@
+#!/usr/bin/perl -w
+use strict;
+my $n=$ARGV[0];
+my $N=$ARGV[1];
+my $F=$ARGV[2];
+my $M=0;
+$n=1 unless(defined($n));
+$N=1 unless(defined($N));
+$F=10 unless(defined($F));
+
+print "$n,$N,$F";
+#my @board=([(0) x 2], [(0) x 2]);
+#print $board[0][1];

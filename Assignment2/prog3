@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+use strict;
+&printHash;
+sub createHash{
+print "hello\n";
+my @list=&fi;
+my %hash_words=();
+my $var=0;my $count=1;
+foreach my $val(@list){
+#my @r=split('[^A-Za-z]+',$val);
+#~ s/^\s+//;
+if($val=~/([A-Za-z]+)/){
+$var=$1;
+$hash_words{$var}++;
+}
+
+}
+return %hash_words;
+}
+
+sub printHash{
+my %hash_values=&createHash;
+while ( (my $k,my $v) = each %hash_values) {
+print "$k => $v\n";
+}
+}
+
+
+sub fi{
+my @spaces=();
+my @sp=();
+while(<>){
+#@spaces =split('\s+|\-',$_);
+push(@sp,split('\s+|\-',$_));
+}
+return  @sp;
+}
+

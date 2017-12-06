@@ -1,0 +1,154 @@
+#!/usr/bin/perl -w
+use strict;
+use List::Util qw ( min max);
+
+# Name: Tejasvi Srigiriraju
+# Assignment :3
+# Submission Date: 08-01-2016
+# Purpose:  To write and implement a Perl program for a Knight’s Tour.
+
+
+printResults();
+
+#SubRoutine : getStart
+#Purpose    : This routine can be used to choose a random starting point on the chessboard and to indicate that starting cell as visited (a true value) and the other cells as unvisited (false values).
+sub getStart{
+my @final_list=();	#initialising a list to store the count values for the trial.
+my $count=0;		#initializing the count variable
+my ($n,$N,$F,$M)=@_;	#copying the values into the variables
+
+my $v=1;		
+print "****size= $n ***\n";	
+
+while($v <= $N){		
+my $rand_value=int(rand($n*$n));	#generating a rand value to calculate the intial row and column value
+my $curCol=$rand_value%$n;		#generating the column value
+
+my $curRow=int($rand_value/$n);		#generating the row value
+
+my @board=([(0) x $n], [(0) x $n]);	#initializing a 2D array with '0'
+
+$board[$curRow][$curCol]=1;		#set the value to '1' for the initial position
+
+$count=&mvKnight($n,$curRow,$curCol,@board); #calling the mvknight subroutine and storing it's count value
+
+
+push(@final_list,$count);			#pushing the each count variable to a list
+
+
+if(($v%$M) eq 0) {			#printing the values for multiples of $M
+print "Trial number: $v \n";
+print "\tRandom starting point: (".($curRow+1) .",".($curCol+1) .")\n";
+print "\tTotal number of squares touched:$count \n";
+
+}
+$v++;
+
+}
+
+return @final_list;
+}
+
+
+#SubRoutine:mvKnight
+#Purpose :This routine can be used to move the knight randomly on the chessboard until no more moves possible for the knight
+sub mvKnight
+{
+
+my($n,$curRow,$curCol,@board)=@_; #Storing the passed values
+
+
+my $count=1;
+my @horz=qw(2 1 -1 -2 -2 -1 1 2);
+my @vert=qw(-1 -2 -2 -1 1 2 2 1);
+
+while(1==1){
+my @newrows=();			#declaring the new rows list
+my @newcols=();			#declaring the new columns list
+foreach my $m(0..7){		#looping on the $m value 
+my $tempRow=$curRow+$vert[$m];	#generating the new row and column value by adding the vert and horz values
+my $tempCol=$curCol+$horz[$m];
+my $return_value=&nextMove($tempRow,$tempCol,$n); # calling the nextMove subroutine by passing necessary parameters.
+if( ($return_value) && (!$board[$tempRow][$tempCol])) { #condition to check nextMove return is true and board value is '0'
+
+push(@newrows,$tempRow);	#pushing the temporary values into a new lits
+push(@newcols,$tempCol);
+
+}
+}
+if(@newrows > 0){			
+my $newValue=rand(@newrows);	#generating a particular position from the possible valid positions
+$count++;			#increasing the count variblae for each visited cell
+$curRow=$newrows[$newValue];	#updating the current row with new row value
+$curCol=$newcols[$newValue];	#updating the current column with the new column value
+$board[$curRow][$curCol]=1;	#setting thew new position to '1'
+
+}
+else{
+return $count;			
+}
+
+}
+
+}
+
+
+#SubRoutine:printResults
+#Purpose:This routine can be used to print the final statistics (minimum number of squares touched, maximum number of squares touched, and the average number of squares touched) for given values of n, N, and F.
+
+sub printResults{
+my($max_value,$min_value,$N,$total)=&driver;	#calling the driver function and storing the values
+my $avg=$total;
+print "Total number of trials: $N \n";		#printing the values
+print "Minimum number of squares touched: $min_value\n";
+print "Maximum number of squares touched: $max_value\n";
+printf "Average number of squares touched :%0.2f\n",$avg; 
+}
+
+#SubRoutine:nextMove
+#Purpose:To find out the position of the next possible cell
+sub nextMove{
+my($curRow,$curCol,$n)=@_; 
+if( ($curRow >=  0 &&  $curRow < $n && $curCol >= 0 && $curCol < $n)){ #if a valid position is found,it returns 1,else 0
+return 1;
+}
+
+else{
+return 0;
+}
+
+}
+
+#SubRoutine:Driver
+#Purpose:It gets the input values from the command line, computes the value of M, calls srand to set the seed for rand; and for N individual experiments, it calls the other routines to simulate the experiment.
+sub driver{
+my @list=();		#declared an empty list
+my $n=$ARGV[0];		#storing the arguement values in a variable
+my $N=$ARGV[1];		
+my $F=$ARGV[2];
+my $M=0;
+$n=1 unless(defined($n));#setting the default values for the varibales
+$N=1 unless(defined($N));
+$F=10 unless(defined($F));
+
+
+if($N<$F){		
+$M=$N;
+}
+else{$M=int($N/$F +0.5);}
+srand(1);		#setting the srand value
+my @value=&getStart($n,$N,$F,$M);#calling the getStart subroutine
+push(@list,@value);	#pushing the each value into the new list
+my $max_value=max(@list); #finding the max value from the list
+my $min_value=min(@list);#finding the min value from the list
+my $total=0;
+
+foreach my $x(@list){
+$total=$total+$x;
+}
+$total=$total/$N; #calculating the average value
+return ($max_value,$min_value,$N,$total);
+
+
+}
+

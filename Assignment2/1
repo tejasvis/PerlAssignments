@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+use strict;
+&createHash;
+sub createHash{
+print "hello\n";
+my @list=&fi;
+foreach my $val(@list){
+my @r=split('[^A-Za-z]+',$val);
+
+if(@r){
+print "@r\n";
+}
+
+#else{
+#print "$val\n";
+#}
+
+}
+
+}
+
+sub fi{
+my @spaces=();
+my @sp=();
+while(<>){
+#@spaces =split('\s+|\-',$_);
+push(@sp,split('\s+|\-',$_));
+}
+return  @sp;
+}
+

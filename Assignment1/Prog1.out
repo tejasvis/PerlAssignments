@@ -1,0 +1,26 @@
+Script started on Tue 05 Jul 2016 11:37:35 PM CDT
+]0;z1786900@tiger: ~/680/Assignmentsz1786900@tiger:~/680/Assignments$ P1 prog1
+*** Output Statistics for Data1 ***
+
+The lowest number is 38.03 :
+ The highest number is 79.33 :
+The average is 65.27 :
+The standard deviation is 9.43 :
+
+*** Output Statistics for Data2 ***
+
+The lowest number is 59.92 :
+ The highest number is 59.92 :
+The average is 59.92 :
+The standard deviation is 0.00 :
+
+*** Output Statistics for Data3 ***
+
+The lowest number is : 
+ The highest number is :
+The average is : 
+The standard deviation is :
+
+]0;z1786900@tiger: ~/680/Assignmentsz1786900@tiger:~/680/Assignments$ exit
+
+Script done on Tue 05 Jul 2016 11:37:51 PM CDT

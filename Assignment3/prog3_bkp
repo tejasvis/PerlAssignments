@@ -1,0 +1,187 @@
+#!/usr/bin/perl -w
+use strict;
+use List::Util qw ( min max);
+
+printResults();
+
+sub getStart{
+my @final_list=();
+my $count=0;
+my ($n,$N,$F,$M)=@_;
+
+#my $rand_value=int(rand($n*$n));
+#my $curCol=$rand_value%$n;
+
+#my $curRow=int($rand_value/$n);
+
+#my @board=([(0) x $n], [(0) x $n]);
+#my @new_ar=\@board;
+#for(my $i=0;$i<$row;$i++){
+
+#for(my $j=0;$j<$col;$j++)
+#	{
+#$board[$row][$col]=0;
+#	}
+#}
+my $v=1;
+#print "N is $N \n";
+while($v <= $N){
+my $rand_value=int(rand($n*$n));
+my $curCol=$rand_value%$n;
+
+my $curRow=int($rand_value/$n);
+
+my @board=([(0) x $n], [(0) x $n]);
+
+$board[$curRow][$curCol]=1;
+foreach my $row (0..$n)
+{
+foreach my $col(0..$n)
+{
+print $board[$row][$col];
+}
+print "\n";
+}
+
+print " rand valn is $rand_value\n";
+$count=&mvKnight($n,$curRow,$curCol,@board);
+
+
+push(@final_list,$count);
+
+
+print "****size= $n ***\n";
+
+if(($v%$N) eq 0) {
+print "Trial number: $v \n";
+print "Random starting point: (".($curRow+1) .",".($curCol+1) .")\n";
+print "Total number of squares touched:$count \n";
+
+}
+$v++;
+
+}
+print "@final_list";
+
+return @final_list;
+}
+
+sub mvKnight
+{
+#my $x=$_[3];
+#print $x;
+#my $curRow=$_[0];
+#my $curCol=$_[1];
+#my @board=$_[2];
+#my $n=$_[4];
+
+my($n,$curRow,$curCol,@board)=@_;
+
+#print "value: $n \n";
+
+my $count=1;
+my @horz=qw(2 1 -1 -2 -2 -1 1 2);
+my @vert=qw(-1 -2 -2 -1 1 2 2 1);
+
+while(1==1){
+my @newrows=();
+my @newcols=();
+#print "possible points for "$curRow,$curCol,"are"," $tempRow, $tempCol \n";
+foreach my $m(0..7){
+my $tempRow=$curRow+$vert[$m];
+my $tempCol=$curCol+$horz[$m];
+print "possible points for ",$curRow,$curCol,"are"," $tempRow, $tempCol \n";
+my $return_value=&nextMove($tempRow,$tempCol,$n);
+
+if($return_value eq 1 && ($board[$tempRow][$tempCol]eq 0)) {
+
+push(@newrows,$tempRow);
+push(@newcols,$tempCol);
+
+}
+else{
+print "Fail\n";
+
+}
+}
+#srand=1;
+if(@newrows gt 0){
+my $newValue=rand(@newrows);
+
+$count++;
+$curRow=$newrows[$newValue];
+$curCol=$newcols[$newValue];
+$board[$newValue][$newValue]=1;
+
+}
+else{
+return $count;
+}
+
+}
+#mvKnight($n,$curRow,$curCol,@board,$n);
+
+#return $count;
+}
+
+
+sub printResults{
+my($max_value,$min_value,$N,$total)=&driver;
+my $avg=$total;
+print "Total number of trials: $N \n";
+print "Minimum number of squares touched: $max_value\n";
+print "Maximum number of squares touched: $min_value\n";
+print "Average number of squares touched:$avg\n"; 
+}
+
+
+sub nextMove{
+#print "hai\n";
+#my $curRow=$_[0];
+#my $curCol=$_[1];
+#my $n=$_[3];
+my($curRow,$curCol,$n)=@_;
+#print $n;
+if( ($curRow < 0 || $curRow >= $n) ||($curCol < 0 || $curCol >= $n)){
+return 0;
+}
+
+else{
+return 1;
+}
+
+}
+
+
+sub driver{
+my @list=();
+my $n=$ARGV[0];
+my $N=$ARGV[1];
+my $F=$ARGV[2];
+my $M=0;
+$n=1 unless(defined($n));
+$N=1 unless(defined($N));
+$F=10 unless(defined($F));
+
+
+if($N<$F){
+$M=$N;
+}
+else{$M=int($N/$F);}
+srand(1);
+my @value=&getStart($n,$N,$F,$M);
+push(@list,@value);
+#print $list[0];
+my $max_value=max(@list);
+my $min_value=min(@list);
+my $total=0;
+
+foreach my $x(@list){
+$total=$total+$x;
+}
+$total=$total/$N;
+return ($max_value,$min_value,$N,$total);
+
+
+}
+

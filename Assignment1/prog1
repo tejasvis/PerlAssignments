@@ -1,0 +1,145 @@
+#!/usr/bin/perl -w
+use strict;
+
+
+# Name: Tejasvi Srigiriraju
+# Assignment :1
+# Submission Date: 07-05-2016
+# Purpose:  To implement a Perl program to compute the statistical values from a given list of floating-point numbers.
+
+
+
+
+#Subroutine: Low
+#Purpose : It calculates the lowest floating number from the provided values in an array
+sub low{
+my(@numbers);
+@numbers=@_;	#@_ is an array that contains all the parameters passed into a subroutine.
+
+my $small=$numbers[0]; #$small is a variable which stores the first number.
+
+foreach my $i(@numbers){ #checking the smallest value among the list in a loop by reading each value
+
+if($i<$small)	
+{
+$small=$i;		#if smallest value is found , it is stored in the $small variable.
+}
+
+}
+return $small;		#returning the smallest value
+}
+
+#Subroutine: High
+#Purpose : It calculates the highest floating number from the provided values in an array
+
+sub high
+{
+my(@numbers);
+@numbers=@_;
+my $large=$numbers[0]; #$large is a variable which stores the first number.
+
+foreach my $i(@numbers){ #checking the largest value among the list in a loop by reading each value
+if($i>$large){
+
+$large=$i;	 #if largest value is found , it is stored in the $small variable.
+}
+
+}
+return $large; 	#returning the highest value
+}
+
+#Subroutine: Total
+#Purpose : It calculates the  total sum of the floating numbers in an array
+sub total{
+my(@numbers);
+@numbers=@_;
+my($total); # $total is a variable which stores the total value of the array.
+
+foreach my $i(@numbers){
+$total+=$i;	
+}
+return $total; #returns the total value
+}
+
+#Subroutine: Average
+#Purpose : It calculates the  total average of the floating numbers in an array
+
+sub average
+{
+my(@numbers);	#declaring the input list.
+@numbers=@_;
+my($avg);	#declaring the avg variable to store the average value
+my $sum=&total(@numbers); #calls the subroutine total to find the sum of the values.
+
+if(@numbers!=0){ 
+$avg= $sum/@numbers; # average value of the numbers in an array are calculated and stored in avg variable
+}
+return $avg;	
+}
+
+#Subroutine: std_deviation
+#Purpose : to find the standard deviation of all the elements in the list.
+sub std_deviation{
+
+my(@value)=@_;# declaring input list
+if(@value==1){ 
+return 0;
+}
+# declaring mean
+my $aver=&average(@value);
+
+my $total;
+#finding the  standard deviation value as per the formula
+foreach (@value) {
+$total+=(($_-$aver)**2);
+}
+
+my $std_dev=sqrt($total/(@value-1));
+return $std_dev;
+}
+
+#Subroutine: print_stat
+#Purpose :  to print the statistics.
+
+sub print_stat{
+#if list is not empty prints all the calculated values
+if(@_){
+printf("The lowest number is: %.2f \n ",$_[0]);
+printf("The highest number is :%.2f\n",$_[1]);
+printf ("The average is :%.2f \n",$_[2]);
+printf("The standard deviation is: %.2f \n",$_[3]);
+  }
+else
+{
+print("The lowest number is : \n ");
+print("The highest number is :\n");
+print("The average is : \n");
+print("The standard deviation is :\n");
+}
+}
+
+#declaring a list
+my @values=();
+
+#reading the values from the input file
+while(<>)
+{
+chomp $_;#deleting the new line for each read value
+push(@values,$_);#pushing the values into an array
+}
+
+#calling all the subroutines and printing them 
+if(@values)
+{
+my $low=&low(@values);
+my $high=&high(@values);
+my $avg=&average(@values);
+my $stdDeviation=&std_deviation(@values);
+&print_stat($low,$high,$avg,$stdDeviation);
+}
+else
+{
+&print_stat();
+exit;
+}
+

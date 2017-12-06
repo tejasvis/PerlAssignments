@@ -1,0 +1,106 @@
+#!/usr/bin/perl -w 
+use strict;
+
+# Name: Tejasvi Srigiriraju
+# Assignment :2
+# Submission Date: 07-19-2016
+# Purpose:  To write and implement a Perl program to scan and process an input text stream.
+
+&openFiles;	#calling the openfiles sub routine
+
+#SubRoutine:checkArgs
+#Purpose:Checks the number of input arguments and prints a diagnostic error message on STDERR and aborts the program if the program does not have the correct number of arguments
+
+sub checkArgs{
+my $files=@ARGV;
+if($files ne 2){	#checks if arguements are less than 2, if it is it exist the program by printing error message.
+die "usage:$! ";
+}
+return ($ARGV[0],$ARGV[1]); #return the name of the input and output files
+}
+
+#Subroutine:openFiles
+#Purpose :  Opens the input and output files and defines file handles for both of these files. It prints a diagnostic error message on STDERR and aborts the execution of program if either file cannot be opened
+
+sub openFiles{
+my ($ifile,$ofile)=&checkArgs; #calling the checkArgs subroutine and storing the input and output files
+
+if(!open(INPUT,$ifile)){	#checking if input file can be opened
+die "can't open:$! No such file or directory !!";
+}
+if(!open(OUTPUT,">$ofile")){   #checking if output file can be opened in write mode
+
+die "can't open:$! No such file or directory !!";
+
+}
+else {
+&printHash;		#calling the print Hash subroutine which intenrally calls the other subroutines.
+}
+
+}
+
+#Subroutine:closeFiles
+#Purpose:Closes the input and output files. It prints a diagnostic error message on STDERR and aborts the execution of program if either file cannot be closed.
+
+sub closeFiles
+{
+#if(tell(FH) != -1)
+close(INPUT);  #closing the input file
+close(OUTPUT);#closing the output file
+}
+
+#Subroutine:createList
+#purpose :Creates a list of words from the input stream, using the whitespaces and dashes as separators, and returns the list.
+sub createList{
+
+my @spaces=();	#creating a list to store the words after splitting using white spaces and separators
+my @sp=();
+while(<INPUT>){	#reading from the file
+chomp;
+@spaces =split('[\s-]',$_); #regular expression which gives the ouput words 
+push(@sp,@spaces); #pushing them to a new list
+}
+return  @sp;	#returned the new list
+}
+
+#Subroutine:createHash
+#Purpose: Removes all non–alphabetical characters from each word and puts each the word and its frequency in a hash, excluding the empty words, and returns the hash.
+
+sub createHash{
+my @list=&createList;# calling the createList subroutine
+my %hash_words=(); #creating a hash to store the keys and their values
+my $var=0;
+foreach my $val(@list){ #using for each loop to apply regular expression on eaach word
+if($val=~/([A-Za-z]+)/){ # regular expression that gives the words only with alphabets 
+$var=$1;
+$var=lc($var);#changing the words to lower case
+$hash_words{$var}++; #storing them in hash and counting theor frequency
+}
+
+}
+return %hash_words; # returng the hash
+}
+
+#Subroutine:printHash
+#Purpose: Prints the size of the hash and its contents – each word and its frequency.
+sub printHash{
+my %hash_values=&createHash;#calling the createHash subroutine and storing in a new hash
+my $ count=0;
+my $size = keys %hash_values;
+print "Size: $size\n";
+foreach my $k(sort keys %hash_values){ #looping on the new hash to print the values
+my $v=$hash_values{$k};#storing the values of a particular key
+$count++;
+printf "%-15s", $k;
+print " : ";
+printf "%-15s", $v;
+if($count==3){ #printing three pairs for a line
+print "\n";
+$count=0;
+}
+}
+print "\n";
+closeFiles();
+}
+
+

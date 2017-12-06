@@ -1,0 +1,91 @@
+#!/usr/bin/perl -w
+use strict;
+use List::Util qw(min,max);
+
+sub getStart{
+my $count=0;
+my @final_list=();
+my ($n,$N,$F,$M)=@_;
+my $rand_value=int(rand($n*$n));
+my $curCol=$rand_value%$n;
+my $curRow=$rand_value/$n;
+
+my @board=([(0) x $n], [(0) x $n]);
+#for(my $i=0;$i<$row;$i++){
+
+#for(my $j=0;$j<$col;$j++)
+#	{
+#$board[$row][$col]=0;
+#	}
+#}
+
+while(1..$N){
+$board[$curRow][$curCol]=1;
+mvKnight($curRow,$curCol,@board,$n);
+
+#$count++;
+}
+push(@final_list,$count);
+
+print "Trial number:\n";
+print "Random starting point: ($curRow,$curCol)\n";
+print "Total number of squares touched:$count \n";
+
+
+return @final_list;
+}
+
+sub mvKnight{
+my ($curRow,$curCol,@board,$n)=@_;
+my @horz=qw(2 1 -1 -2 -2 -1 1 2);
+my @vert=qw(-1 -2 -2 -1 1 2 2 1);
+
+foreach my $m(0..7){
+$curRow+=$vert[$m];
+$curCol+=$horz[$m];
+last unless($curRow<0 || $curRow>$n);
+last unless($curCol<0 || $curCol>$n);
+if($board[$curRow][$curCol]==0)
+{
+$count++;
+$m=0;
+}
+mvKnight($curRow,$curCol);
+}
+
+ 
+
+
+
+
+
+
+}
+
+
+
+sub driver{
+my $inp=@ARGV;
+
+my $n=$ARGV[0];
+my $N=$ARGV[1];
+my $F=$ARGV[2];
+my $M=0;
+$n=1 unless(defined($n));
+$N=1 unless(defined($N));
+$F=10 unless(defined($F));
+
+if($N<$F){
+$M=$N;
+}
+else{$M=$N/$F;}
+srand 1;
+my @value=&getStart;
+push(my @list,@value);
+my $max_value=&max(@list);
+my $min_value=&min(@list);
+
+return ($max_value,$min_value);
+
+}
+
